@@ -1,0 +1,25 @@
+{
+  "name": "node-red-contrib-ui-nest",
+  "version": "0.0.1",
+  "description": "A NEST like UI element for Node-RED",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kleini/node-red-contrib-ui-nest.git"
+  },
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/kleini/node-red-contrib-ui-nest/issues"
+  },
+  "homepage": "https://github.com/kleini/node-red-contrib-ui-nest",
+  "dependencies": {
+    "node-red-dashboard": "2.10"
+  },
+  "node-red": {
+    "nodes": {
+      "NEST": "nest/nest.js"
+    }
+  }
+}
