@@ -1,4 +1,8 @@
 module.exports = function(RED) {
+    var HTML = String.raw`
+<div id="thermostat-WZ">Lala</div>
+`;
+
     RED.log.info("Nest dashboard element " + require("../package.json").version)
     RED.nodes.registerType("nest", nest);
 
@@ -10,9 +14,10 @@ module.exports = function(RED) {
             var ui = RED.require("node-red-dashboard")(RED);
             var done = ui.addWidget({
                 node: node,
-                format: "<div>Lala</div>",
+                format: HTML,
                 templateScope: "local",
-                group: config.group
+                group: config.group,
+                forwardInputMessages: false
             });
             // node status: https://nodered.org/docs/creating-nodes/status
         } catch (e) {
