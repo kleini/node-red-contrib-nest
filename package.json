@@ -15,7 +15,7 @@
   },
   "homepage": "https://github.com/kleini/node-red-contrib-ui-nest",
   "dependencies": {
-    "node-red-dashboard": "2.10"
+    "node-red-dashboard": "~2.10.0"
   },
   "node-red": {
     "nodes": {
