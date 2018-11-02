@@ -1,6 +1,6 @@
 module.exports = function(RED) {
     var HTML = String.raw`
-<div id="thermostat-WZ">Lala</div>
+<div id="{{'thermostat-WZ_'+$id}}">Text: {{msg.payload}}</div>
 `;
 
     RED.log.info("Nest dashboard element " + require("../package.json").version)
@@ -17,18 +17,21 @@ module.exports = function(RED) {
                 format: HTML,
                 templateScope: "local",
                 group: config.group,
-                forwardInputMessages: false
+                forwardInputMessages: false,
+                storeFrontEndInputAsState: false
             });
             // node status: https://nodered.org/docs/creating-nodes/status
+            node.status({fill: "green", shape: "dot", text: "initialised"});
         } catch (e) {
             console.log(e);
             this.error("Kaputt");
             node.error("Hit an error", e);
+            node.status({fill: "red", shape: "ring", text: e.message})
         }
 
         node.on('input', function(msg) {
             node.log("Received: " + msg.payload);
-            node.status({fill: "green", shape: "ring", text: msg.payload});
+            node.status({fill: "green", shape: "dot", text: msg.payload});
         });
 
         node.on("close", done);
