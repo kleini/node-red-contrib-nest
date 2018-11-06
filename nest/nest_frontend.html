@@ -1,137 +1,138 @@
-<div id="{{'nest_' + $id}}"></div>
+<div id="{{'nest_' + $id}}" data-value="{{msg.payload}} {{msg.topic}} {{msg._msgid}} {{msg.value}}"></div>
 
 <style>
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:300);
 #thermostat {
-    margin: 0 auto;
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  margin: 0 auto;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 .dial {
-    -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-            user-select: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
 .dial.away .dial__ico__leaf {
-    visibility: hidden;
+  visibility: hidden;
 }
 .dial.away .dial__lbl--target {
-    visibility: hidden;
+  visibility: hidden;
 }
 .dial.away .dial__lbl--target--half {
-    visibility: hidden;
+  visibility: hidden;
 }
 .dial.away .dial__lbl--away {
-    opacity: 1;
+  opacity: 1;
 }
 .dial .dial__shape {
-    -webkit-transition: fill 0.5s;
-    transition: fill 0.5s;
+  -webkit-transition: fill 0.5s;
+  transition: fill 0.5s;
 }
 .dial__ico__leaf {
-    fill: #13EB13;
-    opacity: 0;
-    -webkit-transition: opacity 0.5s;
-    transition: opacity 0.5s;
-    pointer-events: none;
+  fill: #13EB13;
+  opacity: 0;
+  -webkit-transition: opacity 0.5s;
+  transition: opacity 0.5s;
+  pointer-events: none;
 }
 .dial.has-leaf .dial__ico__leaf {
-    display: block;
-    opacity: 1;
-    pointer-events: initial;
+  display: block;
+  opacity: 1;
+  pointer-events: initial;
 }
 .dial__editableIndicator {
-    fill: white;
-    fill-rule: evenodd;
-    opacity: 0;
-    -webkit-transition: opacity 0.5s;
-    transition: opacity 0.5s;
+  fill: white;
+  fill-rule: evenodd;
+  opacity: 0;
+  -webkit-transition: opacity 0.5s;
+  transition: opacity 0.5s;
 }
 .dial--edit .dial__editableIndicator {
-    opacity: 1;
+  opacity: 1;
 }
 .dial--state--off .dial__shape {
-    fill: #3d3c3c;
+  fill: #3d3c3c;
 }
 .dial--state--heating .dial__shape {
-    fill: #E36304;
+  fill: #E36304;
 }
 .dial--state--cooling .dial__shape {
-    fill: #007AF1;
+  fill: #007AF1;
 }
 .dial__ticks path {
-    fill: rgba(255, 255, 255, 0.3);
+  fill: rgba(255, 255, 255, 0.3);
 }
 .dial__ticks path.active {
-    fill: rgba(255, 255, 255, 0.8);
+  fill: rgba(255, 255, 255, 0.8);
 }
 .dial text {
-    fill: white;
-    text-anchor: middle;
-    font-family: Helvetica, sans-serif;
-    alignment-baseline: central;
+  fill: white;
+  text-anchor: middle;
+  font-family: Helvetica, sans-serif;
+  alignment-baseline: central;
 }
 .dial__lbl--target {
-    font-size: 120px;
-    font-weight: bold;
+  font-size: 120px;
+  font-weight: bold;
 }
 .dial__lbl--target--half {
-    font-size: 40px;
-    font-weight: bold;
-    opacity: 0;
-    -webkit-transition: opacity 0.1s;
-    transition: opacity 0.1s;
+  font-size: 40px;
+  font-weight: bold;
+  opacity: 0;
+  -webkit-transition: opacity 0.1s;
+  transition: opacity 0.1s;
 }
 .dial__lbl--target--half.shown {
-    opacity: 1;
-    -webkit-transition: opacity 0s;
-    transition: opacity 0s;
+  opacity: 1;
+  -webkit-transition: opacity 0s;
+  transition: opacity 0s;
 }
 .dial__lbl--ambient {
-    font-size: 22px;
-    font-weight: bold;
+  font-size: 22px;
+  font-weight: bold;
 }
 .dial__lbl--away {
-    font-size: 72px;
-    font-weight: bold;
-    opacity: 0;
-    pointer-events: none;
+  font-size: 72px;
+  font-weight: bold;
+  opacity: 0;
+  pointer-events: none;
 }
 #controls {
-    font-family: Open Sans;
-    background-color: rgba(255, 255, 255, 0.25);
-    padding: 20px;
-    border-radius: 5px;
-    position: absolute;
-    left: 50%;
-    -webkit-transform: translatex(-50%);
-            transform: translatex(-50%);
-    margin-top: 20px;
+  font-family: Open Sans;
+  background-color: rgba(255, 255, 255, 0.25);
+  padding: 20px;
+  border-radius: 5px;
+  position: absolute;
+  left: 50%;
+  -webkit-transform: translatex(-50%);
+          transform: translatex(-50%);
+  margin-top: 20px;
 }
 #controls label {
-    text-align: left;
-    display: block;
+  text-align: left;
+  display: block;
 }
 #controls label span {
-    display: inline-block;
-    width: 200px;
-    text-align: right;
-    font-size: 0.8em;
-    text-transform: uppercase;
+  display: inline-block;
+  width: 200px;
+  text-align: right;
+  font-size: 0.8em;
+  text-transform: uppercase;
 }
 #controls p {
-    margin: 0;
-    margin-bottom: 1em;
-    padding-bottom: 1em;
-    border-bottom: 2px solid #ccc;
+  margin: 0;
+  margin-bottom: 1em;
+  padding-bottom: 1em;
+  border-bottom: 2px solid #ccc;
 }
 </style>
+
 <script>
 var thermostatDial = (function() {
 
     /*
-        * Utility functions
-        */
+     * Utility functions
+     */
 
     // Create an element with proper SVG namespace, optionally setting its attributes and appending it to another element
     function createSVGElement(tag,attributes,appendTo) {
@@ -205,16 +206,15 @@ var thermostatDial = (function() {
     }
 
     /*
-        * The "MEAT"
-        */
-
+     * The "MEAT"
+     */
     return function(targetElement, options) {
         var self = this;
 
         /*
-            * Options
-            */
-        options = options || {};
+         * Options
+         */
+        var options = options || {};
         options = {
             diameter: options.diameter || 400,
             minValue: options.minValue || 4.5, // Minimum value for target temperature
@@ -224,8 +224,8 @@ var thermostatDial = (function() {
         };
 
         /*
-            * Properties - calculated from options in many cases
-            */
+         * Properties - calculated from options in many cases
+         */
         var properties = {
             tickDegrees: 300, //  Degrees of the dial that should be covered in tick lines
             rangeValue: options.maxValue - options.minValue,
@@ -239,19 +239,21 @@ var thermostatDial = (function() {
         properties.offsetDegrees = 180-(360-properties.tickDegrees)/2;
 
         /*
-            * Object state
-            */
+         * Object state
+         */
         var state = {
             target_temperature: options.minValue,
             ambient_temperature: options.minValue,
             hvac_state: properties.hvac_states[0],
             has_leaf: false,
-            away: false
+            away: false,
+            for_testo: undefined
         };
 
         /*
-            * Property getter / setters
-            */
+         * Property getter / setters
+         */
+        // TODO check passed values. Wrote undefined to ambient_temperature and everything was broken!
         Object.defineProperty(this,'target_temperature',{
             get: function() {
                 return state.target_temperature;
@@ -299,10 +301,19 @@ var thermostatDial = (function() {
                 render();
             }
         });
+        Object.defineProperty(this,'for_testo',{
+            get: function() {
+                return state.for_testo;
+            },
+            set: function(val) {
+                state.for_testo = val;
+            }
+        });
+        self.for_testo = targetElement;
 
         /*
-            * SVG
-            */
+         * SVG
+         */
         var svg = createSVGElement('svg',{
             width: '100%', //options.diameter+'px',
             height: '100%', //options.diameter+'px',
@@ -323,8 +334,8 @@ var thermostatDial = (function() {
         },svg);
 
         /*
-            * Ticks
-            */
+         * Ticks
+         */
         var ticks = createSVGElement('g',{
             class: 'dial__ticks'
         },svg);
@@ -347,8 +358,8 @@ var thermostatDial = (function() {
         };
 
         /*
-            * Labels
-            */
+         * Labels
+         */
         var lblTarget = createSVGElement('text',{
             x: properties.radius,
             y: properties.radius,
@@ -398,8 +409,8 @@ var thermostatDial = (function() {
         },svg);
 
         /*
-            * RENDER
-            */
+         * RENDER
+         */
         function render() {
             renderAway();
             renderHvacState();
@@ -411,8 +422,8 @@ var thermostatDial = (function() {
         render();
 
         /*
-            * RENDER - ticks
-            */
+         * RENDER - ticks
+         */
         function renderTicks() {
             var vMin, vMax;
             if (self.away) {
@@ -436,15 +447,15 @@ var thermostatDial = (function() {
         }
 
         /*
-            * RENDER - ambient temperature
-            */
+         * RENDER - ambient temperature
+         */
         function renderAmbientTemperature() {
             lblAmbient_text.nodeValue = Math.floor(self.ambient_temperature);
             if (self.ambient_temperature%1!=0) {
                 lblAmbient_text.nodeValue += '⁵';
             }
             var peggedValue = restrictToRange(self.ambient_temperature, options.minValue, options.maxValue);
-            degs = properties.tickDegrees * (peggedValue-options.minValue)/properties.rangeValue - properties.offsetDegrees;
+            var degs = properties.tickDegrees * (peggedValue-options.minValue)/properties.rangeValue - properties.offsetDegrees;
             if (peggedValue > self.target_temperature) {
                 degs += 8;
             } else {
@@ -458,23 +469,23 @@ var thermostatDial = (function() {
         }
 
         /*
-            * RENDER - target temperature
-            */
+         * RENDER - target temperature
+         */
         function renderTargetTemperature() {
             lblTarget_text.nodeValue = Math.floor(self.target_temperature);
             setClass(lblTargetHalf,'shown',self.target_temperature%1!=0);
         }
 
         /*
-            * RENDER - leaf
-            */
+         * RENDER - leaf
+         */
         function renderLeaf() {
             setClass(svg,'has-leaf',self.has_leaf);
         }
 
         /*
-            * RENDER - HVAC state
-            */
+         * RENDER - HVAC state
+         */
         function renderHvacState() {
             Array.prototype.slice.call(svg.classList).forEach(function(c) {
                 if (c.match(/^dial--state--/)) {
@@ -485,15 +496,15 @@ var thermostatDial = (function() {
         }
 
         /*
-            * RENDER - away
-            */
+         * RENDER - away
+         */
         function renderAway() {
             svg.classList[self.away ? 'add' : 'remove']('away');
         }
 
         /*
-            * Drag to control
-            */
+         * Drag to control
+         */
         var _drag = {
             inProgress: false,
             startPoint: null,
@@ -568,8 +579,8 @@ var thermostatDial = (function() {
         //
 
         /*
-            * Helper functions
-            */
+         * Helper functions
+         */
         function restrictTargetTemperature(t) {
             return restrictToRange(roundHalf(t),options.minValue,options.maxValue);
         }
@@ -596,31 +607,5 @@ var thermostatDial = (function() {
 
     };
 })();
-
-/* ==== */
-(function(scope) {
-    $('#nest_' + scope.$id).ready(function() {
-        nest = new thermostatDial(document.getElementById('nest_' + scope.$id),{
-            onSetTargetTemperature: function(v) {
-                scope.send({topic: "target_temperature", payload: v});
-            }
-        });
-    });
-    scope.$watch('msg', function(data) {
-        console.log("Watch: " + data);
-        // console.log(data.topic+"  "+data.payload);
-        // if (data.topic == "ambient_temperature") {
-        //     nest.ambient_temperature = data.payload;
-        // } if (data.topic == "target_temperature") {
-        //     nest.target_temperature = data.payload;
-        // } if (data.topic == "hvac_state") {
-        //     nest.hvac_state = data.payload;
-        // } if (data.topic == "has_leaf") {
-        //     nest.has_leaf = data.payload;
-        // } if (data.topic == "away") {
-        //     nest.away = data.payload;
-        // }
-    });
-})(scope);
 
 </script>

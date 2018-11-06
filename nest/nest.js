@@ -17,50 +17,66 @@ module.exports = function(RED) {
                 group: config.group,
                 forwardInputMessages: false,
                 storeFrontEndInputAsState: false,
-                beforeEmit: function(msg, value) {
-                    console.dir(msg);
-                    console.dir(value);
-                    return msg;
-                },
-                // needs beforeSend to message contents to be sent back to runtime
-                // beforeSend: function (msg, orig) {
-                //     node.log("beforeSend: " + msg)
-                //     if (orig) {
-                //         return orig.msg + "X";
-                //     }
+                // convert: function(payload, oldValue, msg) {
+                //     // console.log("convert");
+                //     // console.dir(arguments);
+                //     // console.dir(msg);
+                //     return msg;
                 // },
                 // beforeEmit: function(msg, value) {
-                //     return { value:value + "X" };
+                //     // console.log("beforeEmit");
+                //     // console.dir(arguments);
+                //     // console.dir(msg);
+                //     // console.dir(value);
+                //     // We need the new value including some topic. See below.
+                //     //return {topic: msg.topic, value: value};
+                //     return {topic: msg.topic, value: value};
+                // },
+                // convertBack: function(value) {
+                //     console.log("convertBack");
+                //     console.dir(arguments);
+                //     return value;
+                // },
+                // beforeSend: function(msg) {
+                //     console.log("beforeSend");
+                //     console.dir(arguments);
                 // },
                 initController: function($scope, events) {
-                    // console.dir($scope);
-                    // console.dir(events);
-                    events.on('update-value', function(data) {
-                        console.dir(data);
-                        // console.dir(nest);
-                        if (data.topic == "ambient_temperature") {
-                            nest.ambient_temperature = data.payload;
-                        } if (data.topic == "target_temperature") {
-                            nest.target_temperature = data.payload;
-                        } if (data.topic == "hvac_state") {
-                            nest.hvac_state = data.payload;
-                        } if (data.topic == "has_leaf") {
-                            nest.has_leaf = data.payload;
-                        } if (data.topic == "away") {
-                            nest.away = data.payload;
+                    var nest = undefined;
+                    var elementID = '#nest_' + $scope.$id;
+                    $(elementID).ready(function() {
+                        var divElement = $(elementID).get(0);
+                        nest = new thermostatDial(divElement, {
+                            // FIXME needs to be tested
+                            // onSetTargetTemperature: function(v) {
+                            //     scope.send({topic: "target_temperature", payload: v});
+                            // }
+                        });
+                    });
+                    $scope.$watch('msg', function(data, oldVal, scope) {
+                        if (data) {
+                            if (data.topic == "ambient_temperature") {
+                                nest.ambient_temperature = data.payload;
+                            } if (data.topic == "target_temperature") {
+                                nest.target_temperature = data.payload;
+                            } if (data.topic == "hvac_state") {
+                                nest.hvac_state = data.payload;
+                            } if (data.topic == "has_leaf") {
+                                nest.has_leaf = data.payload;
+                            } if (data.topic == "away") {
+                                nest.away = data.payload;
+                            }
                         }
                     });
                 }
             });
-            node.status({fill: "green", shape: "ring", text: ""});
+            // TODO empty text string needs a single whitespace otherwise some strange error occurs:
+            // key 'node-red-contrib-ui-nest/NEST: (de)' returned an object instead of string.
+            node.status({fill: "green", shape: "ring", text: ' '});
         } catch (e) {
             console.log(e);
             node.status({fill: "red", shape: "ring", text: e.message})
         }
-
-        node.on('input', function(msg) {
-            node.status({fill: "green", shape: "dot", text: msg.payload});
-        });
 
         node.on("close", done);
     }
